@@ -4,8 +4,15 @@ const express = require('express');
 // 5. instantiate express app
 const server = express();
 
+// pull in userRouter & postRouter
+const userRouter = require('./users/userRouter');
+const postRouter = require('./posts/postRouter');
+
 // 6.plug express middleware
 server.use(express.json());
+// 6. plug in userRouter & postRouter
+server.use('/api', userRouter);
+server.use('/api', postRouter);
 
 // 7. create 'catch-all' endpoint
 server.get('*', handleDefault);

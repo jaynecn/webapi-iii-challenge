@@ -13,7 +13,7 @@ router.post('/:id/posts', (req, res) => {
 });
 
 // GET requests
-router.get('', (req, res) => {
+router.get('', logger, (req, res) => {
   db.get(req.query)
   .then(data => {
     res.status(200).json(data);
@@ -43,8 +43,14 @@ router.put('/:id', (req, res) => {
 
 });
 
-//custom middleware
+// CUSTOM MIDDLEWARE
 
+function logger(req, res, next) {
+  console.log(
+    `${req.method} ${req.url} [${new Date().toISOString()}]`);
+    // REMEMBER TO INCLUDE NEXT!!!
+    next();
+}
 function validateUserId(req, res, next) {
 
 };

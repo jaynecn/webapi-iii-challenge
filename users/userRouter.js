@@ -7,7 +7,7 @@ const middle = require('../middleware');
 const router = express.Router();
 
 // POST requests
-router.post('/', (req, res) => {
+router.post('/', middle.logger, (req, res) => {
   db.insert(req.body)
   .then(data => {
     res.status(201).json(data);
@@ -18,6 +18,13 @@ router.post('/', (req, res) => {
 });
 
 router.post('/:id/posts', (req, res) => {
+  db.update(req.body)
+  .then(data => {
+    res.status(201).json(data);
+  })
+  .catch(error => {
+    res.status(400).json({errorMessage: "Please provide text for the post."})
+  })
 
 });
 

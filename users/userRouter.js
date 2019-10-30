@@ -17,13 +17,13 @@ router.post('/', middle.logger, (req, res) => {
   })
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', middle.logger, (req, res) => {
   const post = req.body;
   db.insert(req.body)
   // I CAN'T GET THIS ONE TO WORK AND I DON'T KNOW WHY.  TRIED LOTS OF THINGS IN POSTMAN
   .then(data => {
     console.log(data)
-    res.status(201).json(post);
+    res.status(201).json(data);
   })
   .catch(error => {
     console.log(error)
@@ -66,7 +66,7 @@ router.get('/:id/posts', middle.logger, (req, res) => {
 });
 
 // DELETE requests
-router.delete('/:id', (req, res) => {
+router.delete('/:id', middle.logger, (req, res) => {
   db.remove(req.params.id)
   .then(data => {
     res.status(200).json(data);
@@ -78,7 +78,7 @@ router.delete('/:id', (req, res) => {
 
 
 // PUT requests
-router.put('/:id', (req, res) => {
+router.put('/:id', middle.logger, (req, res) => {
   const changes = req.body;
   db.update(req.params.id, changes)
     .then(data => {
@@ -89,7 +89,6 @@ router.put('/:id', (req, res) => {
     })
 
 });
-
 
 
 module.exports = router;

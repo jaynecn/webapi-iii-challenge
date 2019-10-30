@@ -7,7 +7,7 @@ const middle = require('../middleware');
 const router = express.Router();
 
 // POST requests
-router.post('/', middle.logger, (req, res) => {
+router.post('/', middle.logger, middle.validateUser, (req, res) => {
   db.insert(req.body)
   .then(data => {
     res.status(201).json(data);
@@ -17,16 +17,14 @@ router.post('/', middle.logger, (req, res) => {
   })
 });
 
-router.post('/:id/posts', middle.logger, (req, res) => {
+router.post('/:id/posts', middle.logger, middle.validateUser, middle.validateUserId, (req, res) => {
   const post = req.body;
   db.insert(req.body)
   // I CAN'T GET THIS ONE TO WORK AND I DON'T KNOW WHY.  TRIED LOTS OF THINGS IN POSTMAN
   .then(data => {
-    console.log(data)
     res.status(201).json(data);
   })
   .catch(error => {
-    console.log(error)
     res.status(400).json({errorMessage: "Please provide text for the post." + error.message})
   })
 })
@@ -43,7 +41,7 @@ router.get('', middle.logger, (req, res) => {
 
 });
 
-router.get('/:id', middle.logger, (req, res) => {
+router.get('/:id', middle.logger, middle.validateUserId, (req, res) => {
   db.getById(req.params.id)
   .then(data => {
     res.status(200).json(data);
@@ -62,7 +60,6 @@ router.get('/:id/posts', middle.logger, (req, res) => {
   .catch(error => {
     res.status(500).json({ error: 'The posts information could not be retrieved. ' + error.message })
   })
-
 });
 
 // DELETE requests

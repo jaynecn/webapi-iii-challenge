@@ -13,7 +13,7 @@ router.get('', middle.logger, (req, res) => {
     res.status(200).json(data);
   })
   .catch(error => {
-    res.status(500).json({ error: 'The posts information could not be retrieved.' })
+    res.status(500).json({ error: 'The posts information could not be retrieved. ' + error.message })
   })
 
 });
@@ -43,7 +43,7 @@ router.delete('/:id', middle.logger, (req, res) => {
 
 
 // PUT request
-router.put('/:id', (req, res) => {
+router.put('/:id', middle.validatePost, (req, res) => {
   const changes = req.body;
   db.update(req.params.id, changes)
     .then(data => {

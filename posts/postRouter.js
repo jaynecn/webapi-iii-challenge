@@ -1,10 +1,20 @@
 const express = require('express');
-const posts = require('./postDb');
+const db = require('./postDb');
+
+// import middleware
+const middle = require('../middleware');
 
 const router = express.Router();
 
 // GET requests
-router.get('/', (req, res) => {
+router.get('', middle.logger, (req, res) => {
+  db.get(req.query)
+  .then(data => {
+    res.status(200).json(data);
+  })
+  .catch(error => {
+    res.status(500).json({ error: 'The posts information could not be retrieved.' })
+  })
 
 });
 

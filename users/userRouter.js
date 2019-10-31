@@ -8,7 +8,9 @@ const router = express.Router();
 
 // POST requests
 router.post('/', middle.logger, middle.validateUser, (req, res) => {
-  db.insert(req.body)
+  // const post = {text: req.body.text, user_id: req.params.id };
+  const user = {name: req.body.name}
+  db.insert(user)
   .then(data => {
     res.status(201).json(data);
   })
@@ -17,10 +19,10 @@ router.post('/', middle.logger, middle.validateUser, (req, res) => {
   })
 });
 
-router.post('/:id/posts', middle.logger, middle.validateUser, middle.validateUserId, (req, res) => {
-  const post = req.body;
-  db.insert(req.body)
-  // I CAN'T GET THIS ONE TO WORK AND I DON'T KNOW WHY.  TRIED LOTS OF THINGS IN POSTMAN
+router.post('/:id/posts', middle.logger, middle.validatePost, (req, res) => {
+   // const post = {text: req.body.text, user_id: req.params.id };
+  const post = {text: req.body.text, user_id: req.params.id}
+  db.insert(post)
   .then(data => {
     res.status(201).json(data);
   })

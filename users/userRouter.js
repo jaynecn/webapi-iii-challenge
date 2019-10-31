@@ -1,47 +1,91 @@
-const express = 'express';
+const express = require('express');
+const db = require('./userDb');
+
+// import middleware
+const middle = require('../middleware');
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
+// POST requests
+router.post('/', middle.logger, middle.validateUser, (req, res) => {
+  db.insert(req.body)
+  .then(data => {
+    res.status(201).json(data);
+  })
+  .catch(error => {
+    res.status(400).json({errorMessage: "Please provide a name for the post." + error.message})
+  })
+});
+
+router.post('/:id/posts', middle.logger, middle.validateUser, middle.validateUserId, (req, res) => {
+  const post = req.body;
+  db.insert(req.body)
+  // I CAN'T GET THIS ONE TO WORK AND I DON'T KNOW WHY.  TRIED LOTS OF THINGS IN POSTMAN
+  .then(data => {
+    res.status(201).json(data);
+  })
+  .catch(error => {
+    res.status(400).json({errorMessage: "Please provide text for the post." + error.message})
+  })
+})
+
+// GET requests
+router.get('', middle.logger, (req, res) => {
+  db.get(req.query)
+  .then(data => {
+    res.status(200).json(data);
+  })
+  .catch(error => {
+    res.status(500).json({ error: 'The posts information could not be retrieved.' + error.message })
+  })
 
 });
 
-router.post('/:id/posts', (req, res) => {
+router.get('/:id', middle.logger, middle.validateUserId, (req, res) => {
+  db.getById(req.params.id)
+  .then(data => {
+    res.status(200).json(data);
+  })
+  .catch(error => {
+    res.status(500).json({ error: 'The post information could not be retrieved. ' + error.message})
+  })
 
 });
 
-router.get('/', (req, res) => {
+router.get('/:id/posts', middle.logger, (req, res) => {
+  db.getUserPosts(req.params.id)
+  .then(data => {
+    res.status(200).json(data);
+  })
+  .catch(error => {
+    res.status(500).json({ error: 'The posts information could not be retrieved. ' + error.message })
+  })
+});
+
+// DELETE requests
+router.delete('/:id', middle.logger, (req, res) => {
+  db.remove(req.params.id)
+  .then(data => {
+    res.status(200).json(data);
+  })
+  .catch(error => {
+    res.status(500).json({ error: 'The post could not be removed ' + error.message});
+  })
+});
+
+
+// PUT requests
+router.put('/:id', middle.logger, (req, res) => {
+  const changes = req.body;
+  db.update(req.params.id, changes)
+    .then(data => {
+      res.status(200).json(changes);
+    })
+    .catch(error => {
+      res.status(500).json({ error: 'The pos information could not be modified ' + error.message})
+    })
 
 });
 
-router.get('/:id', (req, res) => {
-
-});
-
-router.get('/:id/posts', (req, res) => {
-
-});
-
-router.delete('/:id', (req, res) => {
-
-});
-
-router.put('/:id', (req, res) => {
-
-});
-
-//custom middleware
-
-function validateUserId(req, res, next) {
-
-};
-
-function validateUser(req, res, next) {
-
-};
-
-function validatePost(req, res, next) {
-
-};
 
 module.exports = router;

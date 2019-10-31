@@ -43,7 +43,7 @@ router.delete('/:id', middle.logger, (req, res) => {
 
 
 // PUT request
-router.put('/:id', middle.validatePost, (req, res) => {
+router.put('/:id', middle.logger, middle.validateUserId, middle.validatePost, (req, res) => {
   const changes = req.body;
   db.update(req.params.id, changes)
     .then(data => {

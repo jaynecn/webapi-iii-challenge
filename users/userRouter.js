@@ -19,7 +19,7 @@ router.post('/', middle.logger, middle.validateUser, (req, res) => {
   })
 });
 
-router.post('/:id/posts', middle.logger, middle.validatePost, (req, res) => {
+router.post('/:id/posts', middle.logger, middle.validatePost, middle.validateUserId, (req, res) => {
    // const post = {text: req.body.text, user_id: req.params.id };
   const post = {text: req.body.text, user_id: req.params.id}
   db.insert(post)
